@@ -5,15 +5,12 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <RouterLink to="/">
+      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    </RouterLink>
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+      <HelloWorld msg="gar.im" />
     </div>
   </header>
 
@@ -64,13 +61,14 @@ nav a:first-of-type {
   }
 
   .logo {
-    margin: 0 2rem 0 0;
+    margin: 0;
   }
 
   header .wrapper {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
+    margin: 0 0 0 2rem;
   }
 
   nav {
