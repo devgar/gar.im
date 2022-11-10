@@ -1,15 +1,21 @@
+<script setup lang="ts">
+import WebPageIcon from './icons/IconWebPage.vue'
+</script>
+
 <template>
-  <div class="item">
-    <i>
-      <slot name="icon"></slot>
-    </i>
-    <div class="details">
-      <h3>
-        <slot name="heading"></slot>
-      </h3>
-      <slot></slot>
+  <a href="https://github.com">
+    <div class="item">
+      <i>
+        <WebPageIcon />
+      </i>
+      <div class="details">
+        <h3>
+          <slot name="heading"></slot>
+        </h3>
+        <slot></slot>
+      </div>
     </div>
-  </div>
+  </a>
 </template>
 
 <style scoped>
@@ -31,6 +37,8 @@ i {
   height: 32px;
 
   color: var(--color-text);
+
+  transition: transform 0.1s;
 }
 
 h3 {
@@ -40,10 +48,15 @@ h3 {
   color: var(--color-heading);
 }
 
+a:hover i {
+  transition: 0.2s;
+  transform: scale(1.2);
+}
+
 @media (min-width: 1024px) {
   .item {
     margin-top: 0;
-    padding: 0.4rem 0 1rem calc(var(--section-gap) / 2);
+    padding: 0.4rem 0 1rem calc(var(--section-gap) / 3);
   }
 
   i {
