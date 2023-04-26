@@ -1,33 +1,53 @@
-use actix_web::{get, App, HttpResponse, HttpServer, Responder, HttpRequest, http};
+use axum::{
+    extract::Path,
+    response::{Redirect},
+    routing::get,
+    Router,
+};
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello, world!")
+async fn index() -> &'static str {
+    "Hello, world!"
 }
 
-#[get("/{slug:.*}")]
-async fn redirect(req: HttpRequest) -> impl Responder {
-    let slug: String = req.match_info().get("slug").unwrap().parse().unwrap();
-    println!("REQUESTED SLUG: ::/{}::", slug);
-
-    if slug == "fail" {
-        HttpResponse::NotFound()
-        .body(format!("404 NOT FOUND\n    REQUESTED SLUG ::/{}:: DOES NOT EXIST", slug))
-    } else {
-        HttpResponse::Found()
-        .append_header((http::header::LOCATION, "https://github.com/devgar"))
-        .finish()
-    }
+async fn app() -> &'static str {
+    "Hello, client!"
 }
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .service(hello)
-            .service(redirect)
-        })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+// TODO Change to not found
+fn local(slug: String) -> String {
+    format!("_/{slug}")
+}
+
+// TODO Change to shortcut
+fn github<'a>(slug: String) -> String {
+    format!("https://github.com/devgar/{slug}")
+}
+
+async fn path(Path(slug): Path<String>) -> Redirect {
+    Redirect::permanent((
+        // TODO Get from DB must be an Option or Result
+        if slug == "" {
+            local(slug)
+        } else {
+            github(slug)
+        }
+    ).as_str())
+}
+
+
+#[tokio::main]
+async fn main() {
+
+    let app = Router::new()
+        .route("/", get(index))
+        .route("/_/*slug", get(app))
+        .route("/+/*slug", get(app))
+        .route("/-/*slug", get(app))
+        .route("/./*slug", get(app))
+        .route("/*slug", get(path));
+
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 }
