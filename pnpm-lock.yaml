@@ -1,0 +1,13 @@
+lockfileVersion: '6.0'
+
+importers:
+
+  .: {}
+
+  apps/blog.gar.im: {}
+
+  apps/dev.gar.im: {}
+
+  apps/ed.gar.im: {}
+
+  apps/gar.im: {}
